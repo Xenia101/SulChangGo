@@ -1,4 +1,6 @@
 <script>
+	import '@fortawesome/fontawesome-free/js/all.min.js';
+	
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
 	import "../app.css";
