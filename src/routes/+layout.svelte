@@ -4,9 +4,11 @@
 	import Header from './Header/Header.svelte';
 	import Footer from './Footer/Footer.svelte';
 	import './styles.css';
+
+	import { SvelteUIProvider } from '@svelteuidev/core';
 </script>
 
-<div class="app">
+<SvelteUIProvider class="app" themeObserver="dark">
 	<Header />
 
 	<main>
@@ -14,7 +16,7 @@
 	</main>
 
 	<Footer />
-</div>
+</SvelteUIProvider>
 
 <style>
 	.app {
