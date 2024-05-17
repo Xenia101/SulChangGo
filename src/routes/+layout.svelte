@@ -1,22 +1,21 @@
 <script>
+	import '../app.css';
 	import '@fortawesome/fontawesome-free/js/all.min.js';
 
 	import Header from './Header/Header.svelte';
 	import Footer from './Footer/Footer.svelte';
 	import './styles.css';
-
-	import { SvelteUIProvider } from '@svelteuidev/core';
 </script>
 
-<SvelteUIProvider class="app" themeObserver="dark">
-	<Header />
+<main class="app">
+	<Header></Header>
 
 	<main>
-		<slot />
+		<slot></slot>
 	</main>
 
-	<Footer />
-</SvelteUIProvider>
+	<Footer></Footer>
+</main>
 
 <style>
 	.app {
