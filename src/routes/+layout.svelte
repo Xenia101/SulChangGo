@@ -2,8 +2,8 @@
 	import '../app.css';
 	import '@fortawesome/fontawesome-free/js/all.min.js';
 
-	import Header from './Header/Header.svelte';
-	import Footer from './Footer/Footer.svelte';
+	import Header from '../lib/components/Header.svelte';
+	import Footer from '../lib/components/Footer.svelte';
 	import './styles.css';
 </script>
 

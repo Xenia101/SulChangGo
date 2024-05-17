@@ -1,9 +1,16 @@
+<script lang="ts">
+	import { isLoggedIn } from '../lib/stores';
+	import Login from './login/+page.svelte';
+	import Home from './home/+page.svelte';
+</script>
+
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Home" />
+	<title>{$isLoggedIn ? 'Home' : 'Login'}</title>
+	<meta name="description" content={$isLoggedIn ? 'Home' : 'Login'} />
 </svelte:head>
 
-<section>Home</section>
-
-<style>
-</style>
+{#if $isLoggedIn}
+	<Home></Home>
+{:else}
+	<Login></Login>
+{/if}
