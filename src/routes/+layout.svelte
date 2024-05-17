@@ -4,7 +4,18 @@
 
 	import Header from '../lib/components/Header.svelte';
 	import Footer from '../lib/components/Footer.svelte';
+	import { isLoggedIn } from '../lib/stores';
 	import './styles.css';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+
+	onMount(() => {
+		if (!$isLoggedIn) {
+			goto('/login');
+		} else {
+			goto('/home');
+		}
+	});
 </script>
 
 <main class="app">
@@ -13,8 +24,6 @@
 	<main>
 		<slot></slot>
 	</main>
-
-	<Footer></Footer>
 </main>
 
 <style>
