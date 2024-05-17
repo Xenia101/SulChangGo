@@ -3,7 +3,6 @@
 
 	import Header from './Header/Header.svelte';
 	import Footer from './Footer/Footer.svelte';
-	import "../app.css";
 	import './styles.css';
 </script>
 

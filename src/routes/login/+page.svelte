@@ -3,6 +3,4 @@
 	<meta name="description" content="Login Page" />
 </svelte:head>
 
-<div class="text-column">
-	Login page
-</div>
+<div class="text-column">Login page</div>

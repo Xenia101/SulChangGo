@@ -1,9 +1,7 @@
 <script>
 </script>
 
-<header>
-	footer
-</header>
+<header>footer</header>
 
 <style>
 </style>
