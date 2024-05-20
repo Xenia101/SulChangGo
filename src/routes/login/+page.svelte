@@ -25,8 +25,8 @@
 		<Card.Header class="flex items-center">
 			<Card.Title>SulChangGo</Card.Title>
 		</Card.Header>
-		<Card.Content>
-			<form>
+		<form>
+			<Card.Content>
 				<div class="grid w-full items-center gap-4">
 					<div class="flex flex-col space-y-1.5">
 						<Label for="email">Email</Label>
@@ -37,14 +37,14 @@
 						<Input id="password" type="password" placeholder="Password" />
 					</div>
 				</div>
-			</form>
-		</Card.Content>
-		<Card.Footer class="flex justify-between">
-			<div class="flex items-center">
-				<Checkbox class="mr-2" id="terms" bind:checked aria-labelledby="terms-label" />
-				<Label id="terms-label" for="terms">Remember me</Label>
-			</div>
-			<Button on:click={login}>로그인</Button>
-		</Card.Footer>
+			</Card.Content>
+			<Card.Footer class="flex justify-between">
+				<div class="flex items-center">
+					<Checkbox class="mr-2" id="terms" bind:checked aria-labelledby="terms-label" />
+					<Label id="terms-label" for="terms">Remember me</Label>
+				</div>
+				<Button on:click={login}>로그인</Button>
+			</Card.Footer>
+		</form>
 	</Card.Root>
 </div>
