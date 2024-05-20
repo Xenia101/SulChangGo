@@ -5,6 +5,9 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
+	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+
+	let checked = false;
 
 	function login() {
 		isLoggedIn.set(true);
@@ -36,7 +39,11 @@
 				</div>
 			</form>
 		</Card.Content>
-		<Card.Footer class="flex justify-end">
+		<Card.Footer class="flex justify-between">
+			<div class="flex items-center">
+				<Checkbox class="mr-2" id="terms" bind:checked aria-labelledby="terms-label" />
+				<Label id="terms-label" for="terms">Remember me</Label>
+			</div>
 			<Button on:click={login}>로그인</Button>
 		</Card.Footer>
 	</Card.Root>
