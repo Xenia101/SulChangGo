@@ -2,9 +2,7 @@
 	import '../app.css';
 	import '@fortawesome/fontawesome-free/js/all.min.js';
 
-	import Header from '../lib/components/Header.svelte';
-	import Footer from '../lib/components/Footer.svelte';
-	import { isLoggedIn } from '../lib/stores';
+	import { isLoggedIn } from '$lib/stores';
 	import './styles.css';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -19,10 +17,8 @@
 </script>
 
 <main class="app">
-	<Header></Header>
-
 	<main>
-		<slot></slot>
+		<slot />
 	</main>
 </main>
 

@@ -38,8 +38,9 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.5.2",
 		"@svelteuidev/composables": "^0.15.6",
-		"bits-ui": "^0.21.7",
+		"bits-ui": "^0.21.8",
 		"clsx": "^2.1.1",
+		"svelte-use-form": "^2.10.0",
 		"tailwind-merge": "^2.3.0",
 		"tailwind-variants": "^0.2.1"
 	}
