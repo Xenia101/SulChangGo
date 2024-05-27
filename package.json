@@ -38,7 +38,7 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.5.2",
 		"@svelteuidev/composables": "^0.15.6",
-		"bits-ui": "^0.21.8",
+		"bits-ui": "^0.21.10",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.378.0",
 		"paneforge": "^0.0.4",
