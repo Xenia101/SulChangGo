@@ -22,15 +22,16 @@ class _LoginCardState extends State<LoginCard> {
         password: password,
       );
 
-      final Session? session = res.session;
-      final User? user = res.user;
-
-      print(session);
-      print(user);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
     } catch (error) {
       ShadToaster.of(context).show(
-        const ShadToast.destructive(
-          description: Text("Login failed. Please check your input."),
+        ShadToast.destructive(
+          title: const Text('Login failed. Please check your input.'),
+          description: Text(error.toString()),
           alignment: Alignment.topCenter,
         ),
       );
@@ -90,9 +91,6 @@ class _LoginCardState extends State<LoginCard> {
               ),
               onPressed: () {
                 if (formKey.currentState!.saveAndValidate()) {
-                  // validation succeeded
-                  print(
-                      'validation succeeded with ${formKey.currentState!.value}');
                   _login(
                     formKey.currentState!.value['email'],
                     formKey.currentState!.value['password'],

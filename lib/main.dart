@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:sulchanggo/home/home.dart';
 import 'package:sulchanggo/login/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,24 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(toolbarHeight: 52),
           );
         },
-        home: const LoginPage(),
+        home: FutureBuilder<User?>(
+          future: Future.value(Supabase.instance.client.auth.currentUser),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                if (snapshot.data != null) {
+                  return const HomePage();
+                } else {
+                  return const LoginPage();
+                }
+              }
+            }
+          },
+        ),
       ),
     );
   }
