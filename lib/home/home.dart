@@ -14,10 +14,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> _getData() async {
-    final supabase = Provider.of<SupabaseClient>(context, listen: false);
+  List<dynamic> data = [];
 
-    print(supabase.auth.currentUser?.email);
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final supabase = Provider.of<SupabaseClient>(context, listen: false);
+      final res =
+          await supabase.from('SulChangGo').select().count(CountOption.exact);
+
+      if (res.count > 0) {
+        setState(() {
+          data = res.data as List<dynamic>;
+        });
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   Future<void> _signOut() async {
@@ -39,26 +57,30 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: Row(
-                children: [
-                  ShadButton(
-                    text: const Text('Get Data'),
-                    onPressed: () {
-                      _getData();
-                    },
-                  ),
-                  ShadButton(
-                    text: const Text('Sign Out'),
-                    onPressed: () {
-                      _signOut();
-                    },
+            data.isNotEmpty
+                ? Expanded(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final item = data[index];
+                        return ListTile(
+                          leading: Image.network(
+                            'https://picsum.photos/200',
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text(item['name'].toString()),
+                          subtitle: Text(item['ml'].toString()),
+                        );
+                      },
+                    ),
                   )
-                ],
-              ),
-            ),
+                : const Text('No data available'),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }

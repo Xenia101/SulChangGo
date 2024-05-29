@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sulchanggo/login/login_card.dart';
+import 'package:sulchanggo/login/widgets/login_card.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
