@@ -10,6 +10,7 @@ Future<void> main() async {
 
   await Supabase.initialize(
     url: supabaseUrl,
+    // TODO: 개발용 키임 개발 끝나면 프로젝트 삭제 후 재생성하고 새로 발급받아야 함
     anonKey:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRocmpjc25ob3FneWh4a2Z0Z3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY4NTE5OTMsImV4cCI6MjAzMjQyNzk5M30.lDjJXAzA9p2k2fZ5EEP_f1tj5PgGhGnVDn16_8neiDg",
     authOptions: const FlutterAuthClientOptions(

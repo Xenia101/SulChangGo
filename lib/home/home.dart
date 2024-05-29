@@ -19,6 +19,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<dynamic> data = [];
   File? _image;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController volumeController = TextEditingController();
+  TextEditingController alcoholController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    volumeController.dispose();
+    alcoholController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -54,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source, StateSetter setState) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
@@ -64,7 +75,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _showPicker(context) {
+  void _showPicker(context, StateSetter setState) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -75,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Photo Library'),
                 onTap: () {
-                  _pickImage(ImageSource.gallery);
+                  _pickImage(ImageSource.gallery, setState);
                   Navigator.of(context).pop();
                 },
               ),
@@ -83,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 leading: const Icon(Icons.photo_camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  _pickImage(ImageSource.camera);
+                  _pickImage(ImageSource.camera, setState);
                   Navigator.of(context).pop();
                 },
               ),
@@ -204,53 +215,76 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           showShadDialog(
             context: context,
-            builder: (context) => ShadDialog.alert(
-              title: const Text('Update SulChangGo'),
-              description: Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Column(
-                  children: [
-                    const ShadInput(
-                      placeholder: Text('Name'),
-                    ),
-                    const SizedBox(height: 8),
-                    const ShadInput(
-                      placeholder: Text('Volume (ml)'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 8),
-                    const ShadInput(
-                      placeholder: Text('Alcohol (%)'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 8),
-                    if (_image != null)
-                      Image.file(
-                        _image!,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            builder: (context) => StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return ShadDialog.alert(
+                  title: const Text('Update SulChangGo'),
+                  description: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: Center(
-                            child: ShadButton.outline(
-                              text: const Text('Add Image'),
-                              onPressed: () => _showPicker(context),
+                        const SizedBox(height: 12),
+                        if (_image != null)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.file(
+                              _image!,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
                           ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: ShadButton.outline(
+                                  text: const Text('Add Image'),
+                                  onPressed: () =>
+                                      _showPicker(context, setState),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 8),
+                        ShadInput(
+                          placeholder: const Text('Name'),
+                          controller: nameController,
+                        ),
+                        const SizedBox(height: 8),
+                        ShadInput(
+                          placeholder: const Text('Volume (ml)'),
+                          keyboardType: TextInputType.number,
+                          controller: volumeController,
+                        ),
+                        const SizedBox(height: 8),
+                        ShadInput(
+                          placeholder: const Text('Alcohol (%)'),
+                          keyboardType: TextInputType.number,
+                          controller: alcoholController,
+                        ),
+                        const SizedBox(height: 8),
                       ],
                     ),
+                  ),
+                  actions: [
+                    ShadButton(
+                        text: const Text('Add'),
+                        onPressed: () {
+                          final String name = nameController.text;
+                          final String volume = volumeController.text;
+                          final String alcohol = alcoholController.text;
+
+                          print('Name: $name');
+                          print('Volume: $volume');
+                          print('Alcohol: $alcohol');
+                        }),
                   ],
-                ),
-              ),
-              actions: [
-                ShadButton(text: const Text('Add'), onPressed: () {}),
-              ],
+                );
+              },
             ),
           );
         },
