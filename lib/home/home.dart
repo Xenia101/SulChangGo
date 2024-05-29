@@ -4,6 +4,8 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:sulchanggo/login/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -16,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic> data = [];
+  File? _image;
 
   @override
   void initState() {
@@ -48,6 +51,46 @@ class _HomePageState extends State<HomePage> {
       MaterialPageRoute(
         builder: (context) => const LoginPage(),
       ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -157,8 +200,60 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
         child: const Icon(Icons.add),
+        onPressed: () {
+          showShadDialog(
+            context: context,
+            builder: (context) => ShadDialog.alert(
+              title: const Text('Update SulChangGo'),
+              description: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  children: [
+                    const ShadInput(
+                      placeholder: Text('Name'),
+                    ),
+                    const SizedBox(height: 8),
+                    const ShadInput(
+                      placeholder: Text('Volume (ml)'),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 8),
+                    const ShadInput(
+                      placeholder: Text('Alcohol (%)'),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 8),
+                    if (_image != null)
+                      Image.file(
+                        _image!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: ShadButton.outline(
+                              text: const Text('Add Image'),
+                              onPressed: () => _showPicker(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                ShadButton(text: const Text('Add'), onPressed: () {}),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

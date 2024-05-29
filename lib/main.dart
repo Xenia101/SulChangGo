@@ -10,7 +10,8 @@ Future<void> main() async {
 
   await Supabase.initialize(
     url: supabaseUrl,
-    anonKey: "",
+    anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRocmpjc25ob3FneWh4a2Z0Z3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY4NTE5OTMsImV4cCI6MjAzMjQyNzk5M30.lDjJXAzA9p2k2fZ5EEP_f1tj5PgGhGnVDn16_8neiDg",
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
     ),
@@ -62,11 +63,10 @@ class MyApp extends StatelessWidget {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                if (snapshot.data != null) {
-                  return const HomePage();
-                } else {
-                  return const LoginPage();
-                }
+                // return snapshot.data != null
+                //     ? const HomePage()
+                //     : const LoginPage();
+                return const HomePage();
               }
             }
           },
