@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -47,12 +49,12 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           data = res.data as List<dynamic>;
           for (var item in data) {
-            final String id = item['id'].toString();
+            final String md5 = item['md5'].toString();
 
             // get image file from storage
             final String url = supabase.storage
                 .from('SulChangGo')
-                .getPublicUrl('images/$id.jpg');
+                .getPublicUrl('images/$md5.jpg');
 
             item['image_url'] = url;
           }
@@ -82,6 +84,32 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _image = File(pickedFile.path);
       });
+    }
+  }
+
+  Future<void> _uploadImage(String md5) async {
+    if (_image == null) return;
+
+    final supabase = Provider.of<SupabaseClient>(context, listen: false);
+    final storageResponse = await supabase.storage
+        .from('SulChangGo')
+        .upload('images/$md5.jpg', _image!);
+
+    print(storageResponse);
+  }
+
+  Future<void> _addDataToDatabase(
+      String name, String volume, String alcohol, String md5) async {
+    try {
+      final supabase = Provider.of<SupabaseClient>(context, listen: false);
+      await supabase.from('SulChangGo').insert({
+        'name': name,
+        'ml': int.parse(volume),
+        'alcohol': int.parse(alcohol),
+        'md5': md5,
+      });
+    } catch (e) {
+      print('Error adding data: $e');
     }
   }
 
@@ -202,6 +230,13 @@ class _HomePageState extends State<HomePage> {
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Placeholder(
+                                        color: Colors.grey,
+                                        fallbackHeight: 100,
+                                        fallbackWidth: 100,
+                                      );
+                                    },
                                   ),
                                 ),
                               ],
@@ -229,7 +264,6 @@ class _HomePageState extends State<HomePage> {
             builder: (context) => StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 return ShadDialog.alert(
-                  title: const Text('Update SulChangGo'),
                   description: Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Column(
@@ -283,16 +317,34 @@ class _HomePageState extends State<HomePage> {
                   ),
                   actions: [
                     ShadButton(
-                        text: const Text('Add'),
-                        onPressed: () {
-                          final String name = nameController.text;
-                          final String volume = volumeController.text;
-                          final String alcohol = alcoholController.text;
+                      text: const Text('Add'),
+                      onPressed: () async {
+                        final String name = nameController.text;
+                        final String volume = volumeController.text;
+                        final String alcohol = alcoholController.text;
 
-                          print('Name: $name');
-                          print('Volume: $volume');
-                          print('Alcohol: $alcohol');
-                        }),
+                        if (_image == null ||
+                            name.isEmpty ||
+                            volume.isEmpty ||
+                            alcohol.isEmpty) {
+                          return;
+                        }
+
+                        final md5 = generateMd5(name);
+                        await _uploadImage(md5);
+                        await _addDataToDatabase(name, volume, alcohol, md5);
+
+                        nameController.clear();
+                        volumeController.clear();
+                        alcoholController.clear();
+                        setState(() {
+                          _image = null;
+                        });
+
+                        fetchData();
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ],
                 );
               },
@@ -302,4 +354,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+String generateMd5(String input) {
+  return md5.convert(utf8.encode(input)).toString();
 }
