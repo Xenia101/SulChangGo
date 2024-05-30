@@ -46,6 +46,16 @@ class _HomePageState extends State<HomePage> {
       if (res.count > 0) {
         setState(() {
           data = res.data as List<dynamic>;
+          for (var item in data) {
+            final String id = item['id'].toString();
+
+            // get image file from storage
+            final String url = supabase.storage
+                .from('SulChangGo')
+                .getPublicUrl('images/$id.jpg');
+
+            item['image_url'] = url;
+          }
         });
       }
     } catch (e) {
@@ -133,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                             DateFormat('yyyy-MM-dd HH:mm:ss').format(createdAt);
                         final bool isWithinOneMonth =
                             DateTime.now().difference(createdAt).inDays <= 30;
+
                         return Padding(
                           padding: const EdgeInsets.only(
                             left: 8.0,
@@ -187,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
-                                    'https://picsum.photos/100',
+                                    item['image_url'].toString(),
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,
